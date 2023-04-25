@@ -1,11 +1,11 @@
 import Link from "next/link"
 
+import { IArticle } from "@/types/articles"
 import { siteConfig } from "@/config/site"
 import { fetchData } from "@/lib/fetch"
 import { buttonVariants } from "@/components/ui/button"
-import { Tags } from "@/components/tags"
-import { IArticle } from "@/types/articles"
 import { Article } from "@/components/article"
+import { Tags } from "@/components/tags"
 
 export default async function IndexPage() {
   const queryParams = {
@@ -23,7 +23,7 @@ export default async function IndexPage() {
     <div className="container sm:flex">
       <section className="items-center gap-6 pb-8 pt-6 md:py-10">
         {articles.map((article: IArticle) => (
-          <div className='py-6' key={article.createdAt}>
+          <div className="py-6" key={article.createdAt}>
             <Article article={article}></Article>
           </div>
         ))}
