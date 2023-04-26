@@ -2,7 +2,7 @@ export async function fetchData(endpoint: string, queryParams?: Object) {
   // Create a new URL object with the endpoint
   const url = new URL(endpoint)
 
-  if(queryParams) {
+  if (queryParams) {
     // Convert non-string query parameters to strings
     const stringifiedQueryParams = Object.fromEntries(
       Object.entries(queryParams).map(([key, value]) => [key, String(value)])
