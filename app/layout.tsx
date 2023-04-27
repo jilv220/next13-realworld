@@ -42,9 +42,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           )}
         >
           <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-            <div className='relative flex min-h-screen flex-col'>
+            <div className='relative block min-h-screen overflow-hidden'>
               <SiteHeader />
-              <div className='m-auto md:flex md:px-4 xl:max-w-[1140px]'>
+              <div className='mx-auto md:flex md:px-4 xl:max-w-[1140px]'>
                 {children}
               </div>
             </div>
