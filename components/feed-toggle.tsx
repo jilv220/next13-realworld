@@ -33,8 +33,10 @@ export function FeedToggle({
         {valueList.map((value, index) => {
           if (index === 0) {
             return (
-              <TabsTrigger key={value} value={value}>
-                <Link href='/'>{value}</Link>
+              <TabsTrigger key={value} value={value} className='p-0'>
+                <Link href='/' className='px-3 py-1.5'>
+                  {value}
+                </Link>
               </TabsTrigger>
             )
           }
