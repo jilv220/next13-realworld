@@ -18,4 +18,10 @@ export interface IArticle {
   author: IAuthor
 }
 
+export interface queryParams {
+  limit: number
+  offset: number
+  tag?: string
+}
+
 export type Articles = IArticle[]

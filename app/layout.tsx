@@ -4,6 +4,7 @@ import { Metadata } from 'next'
 import { siteConfig } from '@/config/site'
 import { fontSans } from '@/lib/fonts'
 import { cn } from '@/lib/utils'
+import { ClientRouterHandler } from '@/components/client-router-handler'
 import { SiteHeader } from '@/components/site-header'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
             </div>
             <TailwindIndicator />
+            <ClientRouterHandler />
           </ThemeProvider>
         </body>
       </html>

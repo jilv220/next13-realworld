@@ -1,5 +1,4 @@
-'use client'
-
+import Link from 'next/link'
 import { VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
@@ -14,17 +13,15 @@ export function BadgeGroup({ tagList, variant }: BadgeGroupProps) {
   return (
     <>
       {tagList.map((tag: string) => (
-        <Badge
-          className={cn(badgeVariants({ variant }), 'mr-[3px]')}
-          variant={variant}
-          key={tag}
-          onClick={() => {
-            console.log(`${tag}`)
-          }}
-        >
-          {' '}
-          {tag}{' '}
-        </Badge>
+        <Link href={`/?tag=${tag}`} key={tag} scroll={true}>
+          <Badge
+            className={cn(badgeVariants({ variant }), 'mr-[3px]')}
+            variant={variant}
+          >
+            {' '}
+            {tag}{' '}
+          </Badge>
+        </Link>
       ))}
     </>
   )
