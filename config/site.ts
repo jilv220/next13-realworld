@@ -19,4 +19,5 @@ export const siteConfig = {
     github: 'https://github.com/shadcn/ui',
     docs: 'https://ui.shadcn.com',
   },
+  pages: 20,
 }

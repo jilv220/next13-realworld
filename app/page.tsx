@@ -1,17 +1,28 @@
+import Link from 'next/link'
+
 import { IArticle, queryParams } from '@/types/articles'
 import { fetchData } from '@/lib/fetch'
+import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button'
 import { Article } from '@/components/article'
+import { BottomNav } from '@/components/bottom-nav'
 import { FeedToggle } from '@/components/feed-toggle'
 import { Tags } from '@/components/tags'
 
 export default async function IndexPage({ searchParams }) {
-  let queryParams: queryParams = {
-    limit: 10,
-    offset: 0,
-  }
-
+  let currPage = 1
   let tabList = ['Global Feed']
   let selected = 0
+
+  if (searchParams.page) {
+    currPage = searchParams.page
+  }
+
+  let queryParams: queryParams = {
+    limit: 10,
+    offset: (currPage - 1) * 10,
+  }
+
   if (searchParams.tag) {
     tabList = [...tabList, `#${searchParams.tag}`]
     selected = 1
@@ -31,15 +42,16 @@ export default async function IndexPage({ searchParams }) {
         selectedValue={tabList[selected]}
         className='basis-3/4'
       >
-        <main className='items-center gap-6 px-4 pb-8 pt-6 md:pb-10'>
+        <main className='items-center gap-6 px-4 pt-6'>
           {articles.map((article: IArticle, index: number) => (
             <div key={article.slug}>
               <Article article={article} isFirst={index === 0}></Article>
             </div>
           ))}
+          <BottomNav />
         </main>
       </FeedToggle>
-      <aside className='mt-6 basis-1/4 px-4 pb-8'>
+      <aside className='basis-1/4 px-4 pb-8 sm:mt-0 md:mt-6'>
         <div className='rounded bg-secondary px-[10px] pb-[10px] pt-[5px]'>
           <p className='mb-[0.2rem]'> Popular Tags </p>
           {/* @ts-expect-error Server Component */}

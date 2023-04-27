@@ -5,23 +5,28 @@ import { usePathname, useSearchParams } from 'next/navigation'
 
 export function ClientRouterHandler() {
   const searchParams = useSearchParams()
-  const tag = searchParams.get('tag')
+
   const path = usePathname()
+  const tag = searchParams.get('tag')
+  const page = searchParams.get('page')
+
   const prevTag = useRef<string | null>()
+  const prevPage = useRef<string | null>()
 
-  const shouldScrollToTop = path === '/' && tag !== prevTag.current
+  const shouldScrollToTop = path === '/'
 
-  // record prev tag
+  // Record prev value
   useEffect(() => {
     prevTag.current = tag
-  }, [tag])
+    prevPage.current = page
+  }, [tag, page])
 
-  // scroll to top when tag changes
+  // Scroll to top
   useEffect(() => {
     if (shouldScrollToTop) {
       window.scrollTo(0, 0)
     }
-  }, [path, shouldScrollToTop, tag])
+  }, [path, shouldScrollToTop, tag, page])
 
   return <></>
 }
