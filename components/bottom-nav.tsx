@@ -1,25 +1,40 @@
 'use client'
 
+import { useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 
-import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 
 import { buttonVariants } from './ui/button'
 
-export function BottomNav() {
-  const pages = Array.from({ length: siteConfig.pages }, (_, i) => i + 1)
+interface BottomNavProps {
+  pageCount: number
+}
+
+export function BottomNav({ pageCount }: BottomNavProps) {
+  const pages = Array.from({ length: pageCount }, (_, i) => i + 1)
   const first = pages[0]
   const last = pages.at(-1)
 
-  const searchParams = useSearchParams()
-  const page = searchParams.get('page')
   const path = usePathname()
+  const searchParams = useSearchParams()
+  const page = searchParams.get('page') || undefined
+
   let currPage = 1
   if (searchParams.get('page') && path == '/') {
     currPage = Number(page)
   }
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams)
+      params.set(name, value)
+
+      return params.toString()
+    },
+    [searchParams]
+  )
 
   return (
     <nav>
@@ -27,7 +42,7 @@ export function BottomNav() {
         {pages.map((el) => (
           <li key={el}>
             <Link
-              href={`/?page=${el}`}
+              href={`${path}?${createQueryString('page', `${el}`)}`}
               className={cn(
                 buttonVariants({ variant: 'outline' }),
                 'w-9',

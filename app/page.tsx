@@ -1,9 +1,6 @@
-import Link from 'next/link'
-
 import { IArticle, queryParams } from '@/types/articles'
+import { siteConfig } from '@/config/site'
 import { fetchData } from '@/lib/fetch'
-import { cn } from '@/lib/utils'
-import { buttonVariants } from '@/components/ui/button'
 import { Article } from '@/components/article'
 import { BottomNav } from '@/components/bottom-nav'
 import { FeedToggle } from '@/components/feed-toggle'
@@ -19,7 +16,7 @@ export default async function IndexPage({ searchParams }) {
   }
 
   let queryParams: queryParams = {
-    limit: 10,
+    limit: siteConfig.limit,
     offset: (currPage - 1) * 10,
   }
 
@@ -34,6 +31,14 @@ export default async function IndexPage({ searchParams }) {
     queryParams
   )
   const articles = res.articles
+  const articlesCount = res.articlesCount
+  const diff =
+    articlesCount -
+    Math.floor(articlesCount / siteConfig.limit) * siteConfig.limit
+  let pageCount =
+    diff > 0 && diff < siteConfig.limit
+      ? articlesCount / siteConfig.limit + 1
+      : articlesCount / siteConfig.limit
 
   return (
     <div className='container md:flex'>
@@ -48,7 +53,7 @@ export default async function IndexPage({ searchParams }) {
               <Article article={article} isFirst={index === 0}></Article>
             </div>
           ))}
-          <BottomNav />
+          <BottomNav pageCount={pageCount} />
         </main>
       </FeedToggle>
       <aside className='basis-1/4 px-4 pb-8 sm:mt-0 md:mt-6'>
