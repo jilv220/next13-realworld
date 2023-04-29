@@ -7,11 +7,11 @@ export const siteConfig = {
   mainNav: [
     {
       title: 'Sign In',
-      href: '/',
+      href: '/login',
     },
     {
       title: 'Sign Up',
-      href: '/',
+      href: '/register',
     },
   ],
   links: {

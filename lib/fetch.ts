@@ -1,4 +1,8 @@
-export async function fetchData(endpoint: string, queryParams?: Object) {
+export async function fetchData(
+  endpoint: string,
+  queryParams?: Object,
+  init?: RequestInit
+) {
   // Create a new URL object with the endpoint
   const url = new URL(endpoint)
 
@@ -14,7 +18,7 @@ export async function fetchData(endpoint: string, queryParams?: Object) {
   }
 
   // Fetch data using the URL object with query parameters
-  const response = await fetch(url)
+  const response = await fetch(url, init)
   const data = await response.json()
   return data
 }

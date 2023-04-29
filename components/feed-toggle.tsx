@@ -31,19 +31,19 @@ export function FeedToggle({
     >
       <TabsList>
         {valueList.map((value, index) => {
-          if (index === 0) {
-            return (
-              <TabsTrigger key={value} value={value} className='text-md p-0'>
+          return (
+            <TabsTrigger value={value} key={value} className='p-0 text-base'>
+              {index === 0 ? (
                 <Link href='/' className='px-3 py-1.5'>
                   {value}
                 </Link>
-              </TabsTrigger>
-            )
-          }
-          return (
-            <TabsTrigger value={value} key={value}>
-              {' '}
-              {value}
+              ) : value === 'Your Feed' ? (
+                <Link href='/?tab=feed' className='px-3 py-1.5'>
+                  {value}
+                </Link>
+              ) : (
+                <div className='px-3 py-1.5'>{value}</div>
+              )}
             </TabsTrigger>
           )
         })}

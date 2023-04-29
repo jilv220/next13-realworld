@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers'
+
 import { IArticle, queryParams } from '@/types/articles'
 import { siteConfig } from '@/config/site'
 import { fetchData } from '@/lib/fetch'
@@ -11,6 +13,9 @@ export default async function IndexPage({ searchParams }) {
   let tabList = ['Global Feed']
   let selected = 0
 
+  const cookieStore = cookies()
+  const token = cookieStore.get('jwt')
+
   if (searchParams.page) {
     currPage = searchParams.page
   }
@@ -22,21 +27,36 @@ export default async function IndexPage({ searchParams }) {
 
   if (searchParams.tag) {
     tabList = [...tabList, `#${searchParams.tag}`]
-    selected = 1
+    selected = tabList.length - 1
     queryParams.tag = searchParams.tag
   }
 
-  const res = await fetchData(
-    'https://api.realworld.io/api/articles',
-    queryParams
-  )
-  const articles = res.articles
-  const articlesCount = res.articlesCount
-  const diff =
-    articlesCount -
-    Math.floor(articlesCount / siteConfig.limit) * siteConfig.limit
+  let articles
+  let articlesCount
+  let res
+  res = await fetchData('https://api.realworld.io/api/articles', queryParams)
+
+  if (token) {
+    tabList = [...tabList, `Your Feed`]
+  }
+  if (searchParams.tab === 'feed' && token) {
+    selected = tabList.length - 1
+    res = await fetchData(
+      'https://api.realworld.io/api/articles/feed',
+      undefined,
+      {
+        headers: {
+          Authorization: `Token ${token.value}`,
+        },
+      }
+    )
+  }
+  articles = res.articles
+  articlesCount = res.articlesCount
+
+  const reminder = articlesCount % siteConfig.limit
   let pageCount =
-    diff > 0 && diff < siteConfig.limit
+    reminder !== 0
       ? articlesCount / siteConfig.limit + 1
       : articlesCount / siteConfig.limit
 
