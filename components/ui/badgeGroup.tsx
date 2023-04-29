@@ -1,3 +1,4 @@
+import { HTMLAttributes } from 'react'
 import Link from 'next/link'
 import { VariantProps } from 'class-variance-authority'
 
@@ -5,13 +6,15 @@ import { cn } from '@/lib/utils'
 
 import { Badge, badgeVariants } from './badge'
 
-interface BadgeGroupProps extends VariantProps<typeof badgeVariants> {
+interface BadgeGroupProps
+  extends VariantProps<typeof badgeVariants>,
+    HTMLAttributes<HTMLDivElement> {
   tagList: string[]
 }
 
-export function BadgeGroup({ tagList, variant }: BadgeGroupProps) {
+export function BadgeGroup({ tagList, variant, className }: BadgeGroupProps) {
   return (
-    <>
+    <div className={className}>
       {tagList.map((tag: string) => (
         <Link href={`/?tag=${tag}`} key={tag} scroll={true}>
           <Badge
@@ -23,6 +26,6 @@ export function BadgeGroup({ tagList, variant }: BadgeGroupProps) {
           </Badge>
         </Link>
       ))}
-    </>
+    </div>
   )
 }

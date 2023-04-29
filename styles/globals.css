@@ -79,10 +79,14 @@
     font-feature-settings: "rlig" 1, "calt" 1;
     font-size: 1rem;
   }
-}
-
-@layer components {
-  .h3-typo {
+  /* Topo */
+  h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl
+  }
+  h3 {
     @apply scroll-m-20 text-2xl font-semibold tracking-tight
+  }
+  p {
+    @apply leading-7
   }
 }

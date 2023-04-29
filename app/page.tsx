@@ -1,7 +1,7 @@
 import { IArticle, queryParams } from '@/types/articles'
 import { siteConfig } from '@/config/site'
 import { fetchData } from '@/lib/fetch'
-import { Article } from '@/components/article'
+import { ArticlePreview } from '@/components/article-preview'
 import { BottomNav } from '@/components/bottom-nav'
 import { FeedToggle } from '@/components/feed-toggle'
 import { Tags } from '@/components/tags'
@@ -41,16 +41,16 @@ export default async function IndexPage({ searchParams }) {
       : articlesCount / siteConfig.limit
 
   return (
-    <div className='container md:flex'>
+    <div className='container mx-auto md:flex md:px-4 xl:max-w-[1140px]'>
       <FeedToggle
         valueList={tabList}
         selectedValue={tabList[selected]}
         className='basis-3/4'
       >
-        <main className='items-center gap-6 px-4 pt-6'>
-          {articles.map((article: IArticle, index: number) => (
+        <main className='items-center gap-6'>
+          {articles.map((article: IArticle) => (
             <div key={article.slug}>
-              <Article article={article} isFirst={index === 0}></Article>
+              <ArticlePreview article={article}></ArticlePreview>
             </div>
           ))}
           <BottomNav pageCount={pageCount} />
