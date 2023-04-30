@@ -6,6 +6,9 @@ import { BadgeGroup } from '@/components/ui/badgeGroup'
 import { Separator } from '@/components/ui/separator'
 import { ArticleMeta } from '@/components/article-meta'
 
+export const revalidate = 900
+export const dynamic = 'error'
+
 export default async function ArticlePage({ params }) {
   const res = await fetchData(
     `https://api.realworld.io/api/articles/${params.slug}`

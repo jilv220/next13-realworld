@@ -16,7 +16,7 @@ export function BadgeGroup({ tagList, variant, className }: BadgeGroupProps) {
   return (
     <div className={className}>
       {tagList.map((tag: string) => (
-        <Link href={`/?tag=${tag}`} key={tag} scroll={true}>
+        <Link href={`/?tag=${tag}`} key={tag}>
           <Badge
             className={cn(badgeVariants({ variant }), 'mr-[3px]')}
             variant={variant}

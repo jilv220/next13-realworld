@@ -25,6 +25,10 @@ export default async function IndexPage({ searchParams }) {
     offset: (currPage - 1) * 10,
   }
 
+  if (token) {
+    tabList = [...tabList, `Your Feed`]
+  }
+
   if (searchParams.tag) {
     tabList = [...tabList, `#${searchParams.tag}`]
     selected = tabList.length - 1
@@ -36,9 +40,6 @@ export default async function IndexPage({ searchParams }) {
   let res
   res = await fetchData('https://api.realworld.io/api/articles', queryParams)
 
-  if (token) {
-    tabList = [...tabList, `Your Feed`]
-  }
   if (searchParams.tab === 'feed' && token) {
     selected = tabList.length - 1
     res = await fetchData(
