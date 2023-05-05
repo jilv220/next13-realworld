@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 
-import { IArticle, queryParams } from '@/types/articles'
+import { ArticleParams, IArticle } from '@/types/articles'
 import { siteConfig } from '@/config/site'
 import { fetchData } from '@/lib/fetch'
 import { ArticlePreview } from '@/components/article-preview'
@@ -20,7 +20,7 @@ export default async function IndexPage({ searchParams }) {
     currPage = searchParams.page
   }
 
-  let queryParams: queryParams = {
+  let queryParams: ArticleParams = {
     limit: siteConfig.limit,
     offset: (currPage - 1) * 10,
   }
@@ -52,8 +52,8 @@ export default async function IndexPage({ searchParams }) {
       }
     )
   }
-  articles = res.articles
-  articlesCount = res.articlesCount
+  articles = res.data.articles
+  articlesCount = res.data.articlesCount
 
   const reminder = articlesCount % siteConfig.limit
   let pageCount =

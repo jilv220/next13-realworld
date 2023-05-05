@@ -1,4 +1,5 @@
 import { HTMLAttributes } from 'react'
+import Link from 'next/link'
 
 import { IArticle } from '@/types/articles'
 import { cn } from '@/lib/utils'
@@ -40,7 +41,9 @@ export function ArticleMeta({
           <AvatarFallback>AI</AvatarFallback>
         </Avatar>
         <div className='ml-2 mr-6 flex flex-col items-start justify-center'>
-          <a className='font-medium'>{author.username}</a>
+          <Link className='font-medium' href={`/profile/@${author.username}`}>
+            {author.username}
+          </Link>
           <span className='text-[0.8rem] font-thin'>
             {formatDate(createdAt)}
           </span>

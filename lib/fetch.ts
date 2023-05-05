@@ -20,5 +20,5 @@ export async function fetchData(
   // Fetch data using the URL object with query parameters
   const response = await fetch(url, init)
   const data = await response.json()
-  return data
+  return { data: data, status: response.status }
 }

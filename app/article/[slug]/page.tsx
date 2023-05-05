@@ -13,7 +13,7 @@ export default async function ArticlePage({ params }) {
   const res = await fetchData(
     `https://api.realworld.io/api/articles/${params.slug}`
   )
-  const article: IArticle = res.article
+  const article: IArticle = res.data.article
   return (
     <>
       <div className='mb-8 bg-secondary py-8'>
