@@ -36,6 +36,7 @@ export default function LoginPage() {
       const res = await response.json()
       setJwtToken(res.user.token)
       router.push('/')
+      router.refresh()
     }
   }
 

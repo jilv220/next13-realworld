@@ -62,28 +62,26 @@ export default async function IndexPage({ searchParams }) {
       : articlesCount / siteConfig.limit
 
   return (
-    <div className='container mx-auto md:flex md:px-4 xl:max-w-[1140px]'>
-      <FeedToggle
-        valueList={tabList}
-        selectedValue={tabList[selected]}
-        className='basis-3/4'
-      >
-        <main className='items-center gap-6'>
-          {articles.map((article: IArticle) => (
-            <div key={article.slug}>
-              <ArticlePreview article={article}></ArticlePreview>
+    <div className='container mx-auto md:px-4 xl:max-w-[1140px]'>
+      <FeedToggle valueList={tabList} selectedValue={tabList[selected]}>
+        <div className='md:flex'>
+          <main className='basis-3/4 items-center'>
+            {articles.map((article: IArticle) => (
+              <div key={article.slug}>
+                <ArticlePreview article={article}></ArticlePreview>
+              </div>
+            ))}
+            <BottomNav pageCount={pageCount} />
+          </main>
+          <aside className='basis-1/4 px-4 pb-8 sm:mt-0 md:mt-6'>
+            <div className='rounded bg-secondary px-[10px] pb-[10px] pt-[5px]'>
+              <p className='mb-[0.2rem]'> Popular Tags </p>
+              {/* @ts-expect-error Server Component */}
+              <Tags></Tags>
             </div>
-          ))}
-          <BottomNav pageCount={pageCount} />
-        </main>
-      </FeedToggle>
-      <aside className='basis-1/4 px-4 pb-8 sm:mt-0 md:mt-6'>
-        <div className='rounded bg-secondary px-[10px] pb-[10px] pt-[5px]'>
-          <p className='mb-[0.2rem]'> Popular Tags </p>
-          {/* @ts-expect-error Server Component */}
-          <Tags></Tags>
+          </aside>
         </div>
-      </aside>
+      </FeedToggle>
     </div>
   )
 }
