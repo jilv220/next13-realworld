@@ -43,6 +43,7 @@ export function BottomNav({ pageCount }: BottomNavProps) {
           <li key={el}>
             <Link
               href={`${path}?${createQueryString('page', `${el}`)}`}
+              prefetch={false}
               className={cn(
                 buttonVariants({ variant: 'outline' }),
                 'w-9',
