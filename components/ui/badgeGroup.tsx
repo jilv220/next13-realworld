@@ -15,7 +15,7 @@ interface BadgeGroupProps
 export function BadgeGroup({ tagList, variant, className }: BadgeGroupProps) {
   return (
     <div className={className}>
-      {tagList.map((tag: string) => (
+      {tagList.map((tag) => (
         <Link href={`/?tag=${tag}`} key={tag}>
           <Badge
             className={cn(badgeVariants({ variant }), 'mr-[3px]')}

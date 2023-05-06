@@ -52,6 +52,7 @@ export default async function IndexPage({ searchParams }) {
       }
     )
   }
+
   articles = res.data.articles
   articlesCount = res.data.articlesCount
 
@@ -63,7 +64,7 @@ export default async function IndexPage({ searchParams }) {
 
   return (
     <div className='container mx-auto md:px-4 xl:max-w-[1140px]'>
-      <FeedToggle valueList={tabList} selectedValue={tabList[selected]}>
+      <FeedToggle valueList={tabList} defaultValue={tabList[selected]}>
         <div className='md:flex'>
           <main className='basis-3/4 items-center'>
             {articles.map((article: IArticle) => (

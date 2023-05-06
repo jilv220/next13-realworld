@@ -31,7 +31,7 @@ export default async function FavoritesPage({ params }) {
         className='container mx-auto md:px-4 xl:max-w-[1140px]'
         slug={profile.username}
         valueList={tabList}
-        selectedValue={tabList[selected]}
+        defaultValue={tabList[selected]}
       >
         <main className='basis-3/4 items-center'>
           {articles.map((article: IArticle) => (
