@@ -8,6 +8,8 @@ import { BottomNav } from '@/components/bottom-nav'
 import { FeedToggle } from '@/components/feed-toggle'
 import { Tags } from '@/components/tags'
 
+export const runtime = 'edge'
+
 export default async function IndexPage({ searchParams }) {
   let currPage = 1
   let tabList = ['Global Feed']
