@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { cookies } from 'next/headers'
 
 import { ArticleParams, IArticle } from '@/types/articles'
@@ -40,7 +41,10 @@ export default async function IndexPage({ searchParams }) {
   let articles
   let articlesCount
   let res
-  res = await fetchData('https://api.realworld.io/api/articles', queryParams)
+  res = await fetchData('https://api.realworld.io/api/articles', queryParams, {
+    cache: 'force-cache',
+    next: { revalidate: 60 },
+  })
 
   if (searchParams.tab === 'feed' && token) {
     selected = tabList.length - 1
@@ -51,6 +55,8 @@ export default async function IndexPage({ searchParams }) {
         headers: {
           Authorization: `Token ${token.value}`,
         },
+        cache: 'force-cache',
+        next: { revalidate: 60 },
       }
     )
   }
@@ -66,25 +72,33 @@ export default async function IndexPage({ searchParams }) {
 
   return (
     <div className='container mx-auto md:px-4 xl:max-w-[1140px]'>
-      <FeedToggle valueList={tabList} defaultValue={tabList[selected]}>
-        <div className='md:flex'>
-          <main className='basis-3/4 items-center'>
-            {articles.map((article: IArticle) => (
-              <div key={article.slug}>
-                <ArticlePreview article={article}></ArticlePreview>
+      <Suspense
+        fallback={
+          <FeedToggle valueList={tabList} defaultValue={tabList[selected]}>
+            Loading...
+          </FeedToggle>
+        }
+      >
+        <FeedToggle valueList={tabList} defaultValue={tabList[selected]}>
+          <div className='md:flex'>
+            <main className='basis-3/4 items-center'>
+              {articles.map((article: IArticle) => (
+                <div key={article.slug}>
+                  <ArticlePreview article={article}></ArticlePreview>
+                </div>
+              ))}
+              <BottomNav pageCount={pageCount} />
+            </main>
+            <aside className='basis-1/4 px-4 pb-8 sm:mt-0 md:mt-6'>
+              <div className='rounded bg-secondary px-[10px] pb-[10px] pt-[5px]'>
+                <p className='mb-[0.2rem]'> Popular Tags </p>
+                {/* @ts-expect-error Server Component */}
+                <Tags></Tags>
               </div>
-            ))}
-            <BottomNav pageCount={pageCount} />
-          </main>
-          <aside className='basis-1/4 px-4 pb-8 sm:mt-0 md:mt-6'>
-            <div className='rounded bg-secondary px-[10px] pb-[10px] pt-[5px]'>
-              <p className='mb-[0.2rem]'> Popular Tags </p>
-              {/* @ts-expect-error Server Component */}
-              <Tags></Tags>
-            </div>
-          </aside>
-        </div>
-      </FeedToggle>
+            </aside>
+          </div>
+        </FeedToggle>
+      </Suspense>
     </div>
   )
 }
