@@ -2,7 +2,7 @@ import { IUser } from '@/types/user'
 
 import { fetchData } from './fetch'
 
-export default async function useFetchUser(init?: RequestInit) {
+export default async function fetchUser(init?: RequestInit) {
   const res = await fetchData(
     'https://api.realworld.io/api/user',
     undefined,

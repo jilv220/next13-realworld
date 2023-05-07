@@ -46,6 +46,19 @@ export default async function IndexPage({ searchParams }) {
     next: { revalidate: 60 },
   })
 
+  if (token) {
+    res = await fetchData(
+      'https://api.realworld.io/api/articles',
+      queryParams,
+      {
+        headers: {
+          Authorization: `Token ${token.value}`,
+        },
+        cache: 'no-store',
+      }
+    )
+  }
+
   if (searchParams.tab === 'feed' && token) {
     selected = tabList.length - 1
     res = await fetchData(
@@ -55,8 +68,7 @@ export default async function IndexPage({ searchParams }) {
         headers: {
           Authorization: `Token ${token.value}`,
         },
-        cache: 'force-cache',
-        next: { revalidate: 60 },
+        cache: 'no-store',
       }
     )
   }
@@ -84,7 +96,6 @@ export default async function IndexPage({ searchParams }) {
             <main className='basis-3/4 items-center'>
               {articles.map((article: IArticle) => (
                 <div key={article.slug}>
-                  {/* @ts-expect-error Server Component */}
                   <ArticlePreview article={article}></ArticlePreview>
                 </div>
               ))}

@@ -24,6 +24,7 @@ export default async function ArticlePage({ params }) {
             favoritesCount={article.favoritesCount}
             createdAt={article.createdAt}
             className='mt-8'
+            favorited={false}
           ></ArticleMeta>
         </div>
       </div>

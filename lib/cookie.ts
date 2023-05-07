@@ -5,3 +5,7 @@ export function setJwtToken(token: string, expires?: Date) {
   }
   document.cookie = `jwt=${token}; Path=/; SameSite=Strict${secure}`
 }
+
+export function getJwtToken() {
+  return document.cookie
+}

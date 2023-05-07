@@ -21,8 +21,8 @@ export interface IArticle {
 export interface ArticleParams {
   limit: number
   offset: number
-  author?: string,
-  tag?: string,
+  author?: string
+  tag?: string
   favorited?: string
 }
 

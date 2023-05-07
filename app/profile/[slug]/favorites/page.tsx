@@ -19,11 +19,14 @@ export default async function FavoritesPage({ params }) {
   const tabList = ['Articles', 'Favorites']
   const selected = 1
 
-  const { articles } = await useFetchArticles({
-    favorited: profile.username,
-    limit: 5,
-    offset: 0,
-  })
+  const { articles } = await useFetchArticles(
+    {
+      favorited: profile.username,
+      limit: 20,
+      offset: 0,
+    },
+    { cache: 'no-store' }
+  )
 
   return (
     <>
@@ -36,7 +39,6 @@ export default async function FavoritesPage({ params }) {
         <main className='basis-3/4 items-center'>
           {articles.map((article: IArticle) => (
             <div key={article.slug}>
-              {/* @ts-expect-error Server Component */}
               <ArticlePreview article={article}></ArticlePreview>
             </div>
           ))}
