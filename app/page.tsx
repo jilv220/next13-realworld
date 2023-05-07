@@ -84,6 +84,7 @@ export default async function IndexPage({ searchParams }) {
             <main className='basis-3/4 items-center'>
               {articles.map((article: IArticle) => (
                 <div key={article.slug}>
+                  {/* @ts-expect-error Server Component */}
                   <ArticlePreview article={article}></ArticlePreview>
                 </div>
               ))}
