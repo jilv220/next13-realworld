@@ -1,6 +1,8 @@
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 
 import { IArticle } from '@/types/articles'
+import { fetchData } from '@/lib/fetch'
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 
@@ -11,7 +13,10 @@ interface ArticleProps {
   article: IArticle
 }
 
-export function ArticlePreview({ article }: ArticleProps) {
+export async function ArticlePreview({ article }: ArticleProps) {
+  const cookieStore = cookies()
+  const token = cookieStore.get('jwt')
+
   return (
     <>
       <div className={cn('py-6')}>
@@ -20,7 +25,7 @@ export function ArticlePreview({ article }: ArticleProps) {
           favoritesCount={article.favoritesCount}
           createdAt={article.createdAt}
           className='mb-4'
-          showRear={true}
+          showRear={token !== undefined}
         ></ArticleMeta>
 
         <div className='mb-4'>
