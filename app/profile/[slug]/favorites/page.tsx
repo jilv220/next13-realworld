@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 import { IArticle } from '@/types/articles'
@@ -19,13 +20,25 @@ export default async function FavoritesPage({ params }) {
   const tabList = ['Articles', 'Favorites']
   const selected = 1
 
+  const cookieStore = cookies()
+  const token = cookieStore.get('jwt')
+
+  let init: RequestInit = {
+    cache: 'no-store',
+  }
+  if (token) {
+    init.headers = {
+      Authorization: `Token ${token.value}`,
+    }
+  }
+
   const { articles } = await useFetchArticles(
     {
       favorited: profile.username,
       limit: 20,
       offset: 0,
     },
-    { cache: 'no-store' }
+    init
   )
 
   return (
