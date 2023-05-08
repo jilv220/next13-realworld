@@ -1,6 +1,6 @@
 'use client'
 
-import { HTMLAttributes, useEffect } from 'react'
+import { HTMLAttributes, useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import { IArticle } from '@/types/articles'
@@ -36,14 +36,31 @@ export function ArticleMeta({
     return date.toDateString()
   }
 
+  const [favoriteState, setFavoriteState] = useState(favorited)
+  const [favoritesCountState, setFavoritesCountState] = useState(favoritesCount)
+
   const toggleFavorite = async (slug: string) => {
-    const article = await fetchFavorite(slug, {
-      method: 'post',
+    const prev = {
+      favoriteState: favoriteState,
+      favoritesCountState: favoritesCountState,
+    }
+    setFavoriteState(!favoriteState)
+    setFavoritesCountState(
+      favoriteState ? favoritesCountState - 1 : favoritesCountState + 1
+    )
+    let init: RequestInit = {
       headers: {
         Authorization: `Token ${token}`,
       },
-    })
-    console.log(article)
+    }
+    init.method = favoriteState ? 'delete' : 'post'
+    try {
+      await fetchFavorite(slug, init)
+    } catch (error) {
+      console.log(error)
+      setFavoriteState(prev.favoriteState)
+      setFavoritesCountState(prev.favoritesCountState)
+    }
   }
 
   return (
@@ -71,16 +88,16 @@ export function ArticleMeta({
       {showRear && (
         <Button
           variant='outline'
-          className={cn(favorited && 'border-primary bg-primary')}
+          className={cn(favoriteState && 'border-primary bg-primary')}
           onClick={() => toggleFavorite(slug as string)}
         >
-          {favorited ? (
+          {favoriteState ? (
             <Icons.favorite size={16} fill='white' className='mr-[3px]' />
           ) : (
             <Icons.favorite size={16} className='mr-[3px]' />
           )}
 
-          {favoritesCount}
+          {favoritesCountState}
         </Button>
       )}
     </div>
