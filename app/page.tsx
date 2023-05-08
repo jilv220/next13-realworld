@@ -41,10 +41,6 @@ export default async function IndexPage({ searchParams }) {
   let articles
   let articlesCount
   let res
-  res = await fetchData('https://api.realworld.io/api/articles', queryParams, {
-    cache: 'force-cache',
-    next: { revalidate: 60 },
-  })
 
   if (token) {
     res = await fetchData(
@@ -55,6 +51,14 @@ export default async function IndexPage({ searchParams }) {
           Authorization: `Token ${token.value}`,
         },
         cache: 'no-store',
+      }
+    )
+  } else {
+    res = await fetchData(
+      'https://api.realworld.io/api/articles',
+      queryParams,
+      {
+        next: { revalidate: 60 },
       }
     )
   }

@@ -4,3 +4,7 @@ export interface IUser {
   bio: string
   image: string
 }
+
+export interface IUserWithToken extends IUser {
+  token: string
+}
