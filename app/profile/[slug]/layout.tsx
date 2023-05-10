@@ -9,19 +9,26 @@ import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Icons } from '@/components/icons'
+import ProfileFollowBtn from '@/components/profileFollowBtn'
 
 export default async function ProfileLayout({ children, params }) {
+  const cookieStore = cookies()
+  const token = cookieStore.get('jwt')
+
   const username = decodeURIComponent(params.slug).slice(1)
+  let init: RequestInit = { cache: 'no-store' }
+  if (token) {
+    init.headers = { Authorization: `Token ${token.value}` }
+  }
   const res = await fetchData(
-    `https://api.realworld.io/api/profiles/${username}`
+    `https://api.realworld.io/api/profiles/${username}`,
+    undefined,
+    init
   )
   if (res.status !== 200) {
     notFound()
   }
   const profile = res.data.profile
-
-  const cookieStore = cookies()
-  const token = cookieStore.get('jwt')
 
   let self: IUser = {
     email: '',
@@ -54,13 +61,11 @@ export default async function ProfileLayout({ children, params }) {
         </Avatar>
         <h4 className='mb-2'>{profile.username}</h4>
         {token && !isSelf ? (
-          <Button
-            variant={'outline'}
-            className='xl:mr-[calc(116px+1rem)] xl:self-end'
-          >
-            {' '}
-            <Icons.follow /> Follow {profile.username}
-          </Button>
+          <ProfileFollowBtn
+            username={profile.username}
+            following={profile.following}
+            token={token}
+          />
         ) : token && isSelf ? (
           <Link
             href='/settings'
