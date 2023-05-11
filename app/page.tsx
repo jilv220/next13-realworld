@@ -10,6 +10,8 @@ import { FeedToggle } from '@/components/feed-toggle'
 import { Tags } from '@/components/tags'
 
 export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+export const revalidate = 5
 
 export default async function IndexPage({ searchParams }) {
   let currPage = 1
@@ -58,7 +60,7 @@ export default async function IndexPage({ searchParams }) {
       'https://api.realworld.io/api/articles',
       queryParams,
       {
-        next: { revalidate: 60 },
+        cache: 'no-store',
       }
     )
   }

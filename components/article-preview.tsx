@@ -19,12 +19,12 @@ export function ArticlePreview({ article }: ArticleProps) {
   return (
     <>
       <div className={cn('py-6')}>
+        {/* @ts-expect-error Server Component */}
         <ArticleMeta
           author={article.author}
           favoritesCount={article.favoritesCount}
           createdAt={article.createdAt}
           slug={article.slug}
-          token={token?.value}
           favorited={article.favorited}
           showRear={token !== undefined}
           className='mb-4'

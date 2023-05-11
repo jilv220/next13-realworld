@@ -1,30 +1,38 @@
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
 import { IArticle } from '@/types/articles'
 import { fetchData } from '@/lib/fetch'
+import { fetchArticle } from '@/lib/useFetchArticles'
 import { BadgeGroup } from '@/components/ui/badgeGroup'
 import { Separator } from '@/components/ui/separator'
 import { ArticleMeta } from '@/components/article-meta'
 
-export const revalidate = 900
-export const dynamic = 'error'
-
 export default async function ArticlePage({ params }) {
-  const res = await fetchData(
-    `https://api.realworld.io/api/articles/${params.slug}`
-  )
-  const article: IArticle = res.data.article
+  let article: IArticle
+  try {
+    article = (await fetchArticle(params.slug, {
+      cache: 'no-store',
+    })) as IArticle
+  } catch (err) {
+    console.log(err)
+    notFound()
+  }
+
   return (
     <>
       <div className='mb-8 bg-secondary py-8'>
         <div className='m-auto px-4 xl:max-w-[1140px]'>
           <h1 className='text-[2.8rem] font-semibold'>{article.title}</h1>
+          {/* @ts-expect-error Server Component */}
           <ArticleMeta
             author={article.author}
             favoritesCount={article.favoritesCount}
             createdAt={article.createdAt}
             className='mt-8'
             favorited={false}
+            slug={article.slug}
+            path='article'
           ></ArticleMeta>
         </div>
       </div>

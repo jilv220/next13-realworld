@@ -1,10 +1,11 @@
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { IUser } from '@/types/user'
 import { fetchData } from '@/lib/fetch'
-import fetchUser from '@/lib/fetchUser'
+import { isAuthAndSelf } from '@/lib/fetchUser'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -29,22 +30,7 @@ export default async function ProfileLayout({ children, params }) {
     notFound()
   }
   const profile = res.data.profile
-
-  let self: IUser = {
-    email: '',
-    username: '',
-    bio: '',
-    image: '',
-  }
-
-  if (token) {
-    self = await fetchUser({
-      headers: {
-        Authorization: `Token ${token.value}`,
-      },
-    })
-  }
-  const isSelf = username === self.username
+  const authAndSelf = await isAuthAndSelf(token, username)
 
   return (
     <>
@@ -60,13 +46,13 @@ export default async function ProfileLayout({ children, params }) {
           <AvatarFallback>AI</AvatarFallback>
         </Avatar>
         <h4 className='mb-2'>{profile.username}</h4>
-        {token && !isSelf ? (
+        {!authAndSelf ? (
           <ProfileFollowBtn
             username={profile.username}
             following={profile.following}
-            token={token}
+            token={token as RequestCookie}
           />
-        ) : token && isSelf ? (
+        ) : authAndSelf ? (
           <Link
             href='/settings'
             className={cn(

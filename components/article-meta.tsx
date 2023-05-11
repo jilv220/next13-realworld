@@ -1,15 +1,16 @@
-'use client'
-
-import { HTMLAttributes, useEffect, useState } from 'react'
+import { HTMLAttributes } from 'react'
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 
 import { IArticle } from '@/types/articles'
-import fetchFavorite from '@/lib/fetchFavorite'
+import { isAuthAndSelf } from '@/lib/fetchUser'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 
+import ArticleDeleteBtn from './article-delete-btn'
+import ArticleFavoriteBtn from './articleFavoriteBtn'
 import { Icons } from './icons'
+import { Button, buttonVariants } from './ui/button'
 
 type ArticleMetaProps = Pick<
   IArticle,
@@ -18,50 +19,26 @@ type ArticleMetaProps = Pick<
   HTMLAttributes<HTMLDivElement> & {
     showRear?: boolean
     slug?: string
-    token?: string
+    path?: string
   }
 
-export function ArticleMeta({
+export async function ArticleMeta({
   author,
   createdAt,
   favoritesCount,
   className,
   showRear,
   slug,
-  token,
   favorited,
+  path,
 }: ArticleMetaProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toDateString()
   }
 
-  const [favoriteState, setFavoriteState] = useState(favorited)
-  const [favoritesCountState, setFavoritesCountState] = useState(favoritesCount)
-
-  const toggleFavorite = async (slug: string) => {
-    const prev = {
-      favoriteState: favoriteState,
-      favoritesCountState: favoritesCountState,
-    }
-    setFavoriteState(!favoriteState)
-    setFavoritesCountState(
-      favoriteState ? favoritesCountState - 1 : favoritesCountState + 1
-    )
-    let init: RequestInit = {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    }
-    init.method = favoriteState ? 'delete' : 'post'
-    try {
-      await fetchFavorite(slug, init)
-    } catch (error) {
-      console.log(error)
-      setFavoriteState(prev.favoriteState)
-      setFavoritesCountState(prev.favoritesCountState)
-    }
-  }
+  const token = cookies().get('jwt')
+  const authAndSelf = await isAuthAndSelf(token, author.username)
 
   return (
     <div className={cn(className, 'flex justify-between')}>
@@ -85,20 +62,25 @@ export function ArticleMeta({
           </span>
         </div>
       </div>
+      {authAndSelf && path === 'article' && (
+        <div>
+          <Link
+            href={`/editor/${slug}`}
+            className={buttonVariants({ variant: 'outline' })}
+          >
+            <Icons.edit size={16} className='mr-1' />
+            Edit Article
+          </Link>
+          <ArticleDeleteBtn slug={slug} token={token?.value} />
+        </div>
+      )}
       {showRear && (
-        <Button
-          variant='outline'
-          className={cn(favoriteState && 'border-primary bg-primary')}
-          onClick={() => toggleFavorite(slug as string)}
-        >
-          {favoriteState ? (
-            <Icons.favorite size={16} fill='white' className='mr-[3px]' />
-          ) : (
-            <Icons.favorite size={16} className='mr-[3px]' />
-          )}
-
-          {favoritesCountState}
-        </Button>
+        <ArticleFavoriteBtn
+          favorited={favorited}
+          favoritesCount={favoritesCount}
+          slug={slug as string}
+          token={token?.value as string}
+        />
       )}
     </div>
   )

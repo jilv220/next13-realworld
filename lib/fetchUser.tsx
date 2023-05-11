@@ -1,3 +1,5 @@
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
+
 import { IUser, IUserWithToken } from '@/types/user'
 
 import { fetchData } from './fetch'
@@ -38,4 +40,27 @@ export async function fetchUsersLogin(init: RequestInit) {
       throw new Error(res.data)
   }
   return res.data.user as IUserWithToken
+}
+
+export async function isAuthAndSelf(
+  token: RequestCookie | undefined,
+  username: string
+) {
+  if (!token) return false
+
+  let self: IUser = {
+    email: '',
+    username: '',
+    bio: '',
+    image: '',
+  }
+
+  if (token) {
+    self = await fetchUser({
+      headers: {
+        Authorization: `Token ${token.value}`,
+      },
+    })
+  }
+  return username === self.username
 }
