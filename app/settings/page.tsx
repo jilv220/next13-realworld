@@ -1,5 +1,7 @@
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
+import { IUserWithToken } from '@/types/user'
 import fetchUser from '@/lib/fetchUser'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 export default async function SettingsPage() {
   const cookieStore = cookies()
   const token = cookieStore.get('jwt')
+
   let init: RequestInit = {
     cache: 'no-store',
   }
@@ -17,7 +20,13 @@ export default async function SettingsPage() {
       Authorization: `Token ${token.value}`,
     }
   }
-  const user = await fetchUser(init)
+
+  let user: IUserWithToken
+  try {
+    user = await fetchUser(init)
+  } catch (err) {
+    redirect('/')
+  }
 
   return (
     <div className='container'>
