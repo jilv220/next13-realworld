@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 
@@ -21,8 +21,6 @@ export function BottomNav({ pageCount }: BottomNavProps) {
   const searchParams = useSearchParams()
   const page = searchParams.get('page') || undefined
 
-  const router = useRouter()
-
   let currPage = 1
   if (searchParams.get('page') && path == '/') {
     currPage = Number(page)
@@ -39,19 +37,13 @@ export function BottomNav({ pageCount }: BottomNavProps) {
   )
 
   return (
-    <nav
-      onMouseEnter={() => {
-        router.prefetch(
-          `${path}?${createQueryString('page', `${currPage + 1}`)}`
-        )
-      }}
-    >
+    <nav>
       <ul className='my-4 flex flex-wrap'>
         {pages.map((el) => (
           <li key={el}>
             <Link
               href={`${path}?${createQueryString('page', `${el}`)}`}
-              prefetch={false}
+              prefetch={el === currPage + 1}
               className={cn(
                 buttonVariants({ variant: 'outline' }),
                 'w-9',

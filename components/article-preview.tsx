@@ -44,6 +44,7 @@ export function ArticlePreview({ article }: ArticleProps) {
           <div>
             <BadgeGroup
               tagList={article.tagList}
+              prefetch={true}
               variant='outline'
             ></BadgeGroup>
           </div>

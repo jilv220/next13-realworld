@@ -10,13 +10,20 @@ interface BadgeGroupProps
   extends VariantProps<typeof badgeVariants>,
     HTMLAttributes<HTMLDivElement> {
   tagList: string[]
+  prefetch?: boolean
 }
 
-export function BadgeGroup({ tagList, variant, className }: BadgeGroupProps) {
+export function BadgeGroup({
+  tagList,
+  prefetch = false,
+  variant,
+  className,
+}: BadgeGroupProps) {
+  console.log(prefetch)
   return (
     <div className={className}>
       {tagList.map((tag) => (
-        <Link href={`/?tag=${tag}`} key={tag}>
+        <Link href={`/?tag=${tag}`} prefetch={prefetch} key={tag}>
           <Badge
             className={cn(badgeVariants({ variant }), 'mr-[3px]')}
             variant={variant}
