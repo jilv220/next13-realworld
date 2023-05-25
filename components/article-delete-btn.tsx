@@ -18,6 +18,7 @@ export default function ArticleDeleteBtn({ slug, token }) {
         },
       })
       router.push('/')
+      router.refresh()
     } catch (err) {
       console.log(err)
     }

@@ -23,11 +23,13 @@ export default async function fetchUser(init?: RequestInit) {
   return res.data.user as IUserWithToken
 }
 
-export async function fetchUsersLogin(init: RequestInit) {
+export async function fetchUsersLogin(token: RequestCookie) {
   const res = await fetchData(
     'https://api.realworld.io/api/users/login',
     undefined,
-    init
+    {
+      headers: { Authorization: `Token ${token.value}` },
+    }
   )
   switch (res.status) {
     case 401:
