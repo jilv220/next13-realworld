@@ -44,6 +44,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
             <div className='relative block min-h-screen overflow-hidden'>
+              {/* @ts-expect-error Server Component */}
               <SiteHeader />
               <div>{children}</div>
             </div>
