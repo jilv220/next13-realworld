@@ -1,3 +1,4 @@
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { notFound } from 'next/navigation'
 
 import { ArticleParams, IArticle } from '@/types/articles'
@@ -17,6 +18,35 @@ export default async function useFetchArticles(
     return notFound()
   }
   return { articles: res.data.articles, articlesCount: res.data.articlesCount }
+}
+
+export async function createArticle(token: RequestCookie, body: BodyInit) {
+  const res = await fetchData(
+    'https://api.realworld.io/api/articles',
+    undefined,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    }
+  )
+  switch (res.status) {
+    case 401:
+      throw new Error('unauthorized')
+    case 200:
+      break
+    case 204:
+      // no content, delete success
+      return
+    case 422:
+      throw new Error(res.data.errors.body)
+    default:
+      throw new Error(res.data)
+  }
+  return res.data.article as IArticle
 }
 
 export async function fetchArticle(slug: string, init?: RequestInit) {

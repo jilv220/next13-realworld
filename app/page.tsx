@@ -11,7 +11,6 @@ import { Tags } from '@/components/tags'
 
 export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
-export const revalidate = 5
 
 export default async function IndexPage({ searchParams }) {
   let currPage = 1
