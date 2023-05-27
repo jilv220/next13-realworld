@@ -54,7 +54,11 @@ export async function ArticleMeta({
           <AvatarFallback>AI</AvatarFallback>
         </Avatar>
         <div className='ml-2 mr-6 flex flex-col items-start justify-center'>
-          <Link className='font-medium' href={`/profile/@${author.username}`}>
+          <Link
+            className='font-medium'
+            href={`/profile/@${author.username}`}
+            prefetch={false}
+          >
             {author.username}
           </Link>
           <span className='text-[0.8rem] font-thin'>

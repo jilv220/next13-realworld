@@ -32,20 +32,26 @@ export function ArticlePreview({ article, index }: ArticleProps) {
         ></ArticleMeta>
 
         <div className='mb-4'>
-          <Link href={`/article/${article.slug}`}>
+          <Link
+            href={`/article/${article.slug}`}
+            prefetch={index !== 0 && true}
+          >
             <h3 className='mb-[3px]'>{article.title}</h3>
             <p className='leading-7'>{article.description}</p>
           </Link>
         </div>
 
         <div className='flex justify-between'>
-          <Link href={`/article/${article.slug}`}>
+          <Link
+            href={`/article/${article.slug}`}
+            prefetch={index !== 0 && true}
+          >
             <span>Read more...</span>
           </Link>
           <div>
             <BadgeGroup
               tagList={article.tagList}
-              prefetch={index !== 0 && true}
+              prefetch={false}
               variant='outline'
             ></BadgeGroup>
           </div>
