@@ -19,7 +19,6 @@ export function BadgeGroup({
   variant,
   className,
 }: BadgeGroupProps) {
-  console.log(prefetch)
   return (
     <div className={className}>
       {tagList.map((tag) => (

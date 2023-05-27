@@ -99,9 +99,12 @@ export default async function IndexPage({ searchParams }) {
         <FeedToggle valueList={tabList} defaultValue={tabList[selected]}>
           <div className='md:flex'>
             <main className='basis-3/4 items-center'>
-              {articles.map((article: IArticle) => (
+              {articles.map((article: IArticle, index) => (
                 <div key={article.slug}>
-                  <ArticlePreview article={article}></ArticlePreview>
+                  <ArticlePreview
+                    article={article}
+                    index={index}
+                  ></ArticlePreview>
                 </div>
               ))}
               <BottomNav pageCount={pageCount} />

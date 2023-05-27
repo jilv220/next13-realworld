@@ -9,10 +9,11 @@ import { ArticleMeta } from './article-meta'
 import { BadgeGroup } from './ui/badgeGroup'
 
 interface ArticleProps {
+  index?: number
   article: IArticle
 }
 
-export function ArticlePreview({ article }: ArticleProps) {
+export function ArticlePreview({ article, index }: ArticleProps) {
   const cookieStore = cookies()
   const token = cookieStore.get('jwt')
 
@@ -44,7 +45,7 @@ export function ArticlePreview({ article }: ArticleProps) {
           <div>
             <BadgeGroup
               tagList={article.tagList}
-              prefetch={true}
+              prefetch={index !== 0 && true}
               variant='outline'
             ></BadgeGroup>
           </div>

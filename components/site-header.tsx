@@ -27,7 +27,7 @@ export async function SiteHeader() {
   try {
     user = await fetchUser(init)
   } catch (err) {
-    console.error(err)
+    // console.error(err)
   }
   return (
     <header className='sticky top-0 z-40 w-full border-b bg-background'>
