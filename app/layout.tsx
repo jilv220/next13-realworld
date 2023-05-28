@@ -5,6 +5,7 @@ import { siteConfig } from '@/config/site'
 import { fontSans } from '@/lib/fonts'
 import { cn } from '@/lib/utils'
 import { ClientRouterHandler } from '@/components/client-router-handler'
+import ProgressBar from '@/components/progress-bar'
 import { SiteHeader } from '@/components/site-header'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           )}
         >
           <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+            <ProgressBar />
             <div className='relative block min-h-screen overflow-hidden'>
               {/* @ts-expect-error Server Component */}
               <SiteHeader />
