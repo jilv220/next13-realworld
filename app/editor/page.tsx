@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation'
 
 import fetchUser from '@/lib/fetchUser'
 import { createArticle } from '@/lib/useFetchArticles'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import EditorSubmitBtn from '@/components/editor-submit-btn'
 
 export default async function EditorPage() {
   const cookieStore = cookies()
@@ -46,6 +46,8 @@ export default async function EditorPage() {
     } catch (err) {
       console.error(err)
     }
+
+    redirect('/')
   }
 
   return (
@@ -77,7 +79,13 @@ export default async function EditorPage() {
               className='mb-4 px-6 py-4 text-base'
             ></Input>
           </fieldset>
-          <EditorSubmitBtn />
+          <Button
+            className='float-right px-6 py-4 text-base'
+            size='lg'
+            type='submit'
+          >
+            Publish Article
+          </Button>
         </form>
       </div>
     </div>

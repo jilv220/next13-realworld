@@ -1,11 +1,14 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { IArticle } from '@/types/articles'
-import { fetchData } from '@/lib/fetch'
+import { isAuth } from '@/lib/fetchUser'
+import { getJwtToken } from '@/lib/serverActions'
 import { fetchArticle } from '@/lib/useFetchArticles'
 import { BadgeGroup } from '@/components/ui/badgeGroup'
 import { Separator } from '@/components/ui/separator'
+import ArticleCommentSection from '@/components/article-comment-section'
 import { ArticleMeta } from '@/components/article-meta'
 
 export default async function ArticlePage({ params }) {
@@ -18,6 +21,9 @@ export default async function ArticlePage({ params }) {
     console.log(err)
     notFound()
   }
+
+  const token = await getJwtToken()
+  const isUserAuth = await isAuth(token)
 
   return (
     <>
@@ -40,17 +46,21 @@ export default async function ArticlePage({ params }) {
         <p className='mb-8'>{article.body}</p>
         <BadgeGroup tagList={article.tagList} className='mb-4'></BadgeGroup>
         <Separator className='my-4' />
-        <div className='flex'>
-          <p className='mb-12 ml-[16.66667%] mt-6'>
-            <Link href='/login' className='text-primary'>
-              Sign in
-            </Link>{' '}
-            or{' '}
-            <Link href='/register' className='text-primary'>
-              sign up
-            </Link>{' '}
-            to add comments on this article.
-          </p>
+        <div className='mx-[-15px] flex flex-wrap'>
+          {isUserAuth ? (
+            <ArticleCommentSection slug={params.slug} />
+          ) : (
+            <p className='mb-12 ml-[16.66667%] mt-6'>
+              <Link href='/login' className='text-primary'>
+                Sign in
+              </Link>{' '}
+              or{' '}
+              <Link href='/register' className='text-primary'>
+                sign up
+              </Link>{' '}
+              to add comments on this article.
+            </p>
+          )}
         </div>
       </div>
     </>

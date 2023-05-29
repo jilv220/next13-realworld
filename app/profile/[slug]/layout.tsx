@@ -3,12 +3,11 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { IUser } from '@/types/user'
 import { fetchData } from '@/lib/fetch'
-import { isAuthAndSelf } from '@/lib/fetchUser'
+import { isAuth } from '@/lib/fetchUser'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { Icons } from '@/components/icons'
 import ProfileFollowBtn from '@/components/profileFollowBtn'
 
@@ -30,7 +29,7 @@ export default async function ProfileLayout({ children, params }) {
     notFound()
   }
   const profile = res.data.profile
-  const authAndSelf = await isAuthAndSelf(token, username)
+  const authAndSelf = await isAuth(token, username)
 
   return (
     <>

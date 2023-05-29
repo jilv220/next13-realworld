@@ -1,6 +1,5 @@
 'use client'
 
-import { useRef } from 'react'
 import NextTopLoader from 'nextjs-toploader'
 
 interface ProgressBarProps {
@@ -8,13 +7,7 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ showSpinner = false }: ProgressBarProps) {
-  // why this works...
-  const primaryRef = useRef('var(--primary)')
-
   return (
-    <NextTopLoader
-      color={`hsl(${primaryRef.current})`}
-      showSpinner={showSpinner}
-    />
+    <NextTopLoader color={`hsl(var(--primary))`} showSpinner={showSpinner} />
   )
 }

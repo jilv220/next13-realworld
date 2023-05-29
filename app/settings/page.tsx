@@ -1,12 +1,15 @@
+import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { IUserWithToken } from '@/types/user'
 import fetchUser from '@/lib/fetchUser'
+import { clearJwtToken } from '@/lib/serverActions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import LogoutBtn from '@/components/logout-btn'
 
 export default async function SettingsPage() {
   const cookieStore = cookies()
@@ -85,14 +88,7 @@ export default async function SettingsPage() {
         </form>
         <form className='w-full md:max-w-[40%]'>
           <Separator className='my-4' />
-          <Button
-            className='float-left mb-4 px-6 py-4 text-base hover:border-destructive hover:bg-destructive'
-            variant={'outline'}
-            size='lg'
-            type='submit'
-          >
-            Or click here to logout
-          </Button>
+          <LogoutBtn />
         </form>
       </div>
     </div>

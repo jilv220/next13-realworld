@@ -3,14 +3,14 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 
 import { IArticle } from '@/types/articles'
-import { isAuthAndSelf } from '@/lib/fetchUser'
+import { isAuth } from '@/lib/fetchUser'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 import ArticleDeleteBtn from './article-delete-btn'
 import ArticleFavoriteBtn from './articleFavoriteBtn'
 import { Icons } from './icons'
-import { Button, buttonVariants } from './ui/button'
+import { buttonVariants } from './ui/button'
 
 type ArticleMetaProps = Pick<
   IArticle,
@@ -38,7 +38,7 @@ export async function ArticleMeta({
   }
 
   const token = cookies().get('jwt')
-  const authAndSelf = await isAuthAndSelf(token, author.username)
+  const authAndSelf = await isAuth(token, author.username)
 
   return (
     <div className={cn(className, 'flex justify-between')}>

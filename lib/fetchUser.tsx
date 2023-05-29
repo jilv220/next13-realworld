@@ -44,25 +44,27 @@ export async function fetchUsersLogin(token: RequestCookie) {
   return res.data.user as IUserWithToken
 }
 
-export async function isAuthAndSelf(
+export async function isAuth(
   token: RequestCookie | undefined,
-  username: string
+  username?: string
 ) {
   if (!token) return false
-
-  let self: IUser = {
-    email: '',
-    username: '',
-    bio: '',
-    image: '',
-  }
-
-  if (token) {
+  let self: IUserWithToken
+  try {
     self = await fetchUser({
       headers: {
         Authorization: `Token ${token.value}`,
       },
     })
+    if (username && username === self.username) {
+      return true
+    } else if (!username) {
+      return true
+    } else {
+      return false
+    }
+  } catch (err) {
+    // console.error(err)
+    return false
   }
-  return username === self.username
 }

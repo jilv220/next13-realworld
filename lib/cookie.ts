@@ -6,6 +6,6 @@ export function setJwtToken(token: string, expires?: Date) {
   document.cookie = `jwt=${token}; Path=/; SameSite=Strict${secure}`
 }
 
-export function getJwtToken() {
-  return document.cookie
+export function clearJwtToken() {
+  document.cookie = `jwt=deleted; Expires=${new Date(0)}}; Path=/`
 }
