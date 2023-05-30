@@ -1,43 +1,42 @@
-'use client'
-
+import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
-import { setJwtToken } from '@/lib/cookie'
+import { IUserWithToken } from '@/types/user'
+import { fetchUsersLogin, isAuth } from '@/lib/fetchUser'
+import { getJwtToken } from '@/lib/serverActions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-export default function LoginPage() {
-  const router = useRouter()
+export default async function LoginPage() {
+  const token = await getJwtToken()
+  const shouldRedirect = await isAuth(token)
+  if (shouldRedirect) {
+    redirect('/')
+  }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    const data = {
-      user: {
-        email: '',
-        password: '',
-      },
+  const handleLogin = async (formData: FormData) => {
+    'use server'
+    const formEntries = formData.entries()
+    const data = Object.fromEntries(formEntries)
+    const body = JSON.stringify({ user: data })
+
+    let user: IUserWithToken
+    try {
+      user = await fetchUsersLogin(body)
+      const isProd = process.env.NODE_ENV === 'production'
+      cookies().set({
+        name: 'jwt',
+        value: `${user.token}`,
+        path: '/',
+        secure: isProd,
+        httpOnly: true,
+      })
+    } catch (err) {
+      console.error(err)
+      return
     }
-
-    const formData = new FormData(event.target)
-    for (const [key, value] of formData.entries()) {
-      data.user[key] = value
-    }
-
-    const response = await fetch('https://api.realworld.io/api/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-
-    if (response.status === 200) {
-      const res = await response.json()
-      setJwtToken(res.user.token)
-      router.push('/')
-      router.refresh()
-    }
+    redirect('/')
   }
 
   return (
@@ -52,11 +51,7 @@ export default function LoginPage() {
             Need an account?
           </Link>
         </p>
-        <form
-          onSubmit={handleSubmit}
-          method='post'
-          className='w-full md:max-w-[40%]'
-        >
+        <form className='w-full md:max-w-[40%]' action={handleLogin}>
           <fieldset>
             <Input
               name='email'

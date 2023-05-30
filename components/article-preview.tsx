@@ -1,7 +1,7 @@
-import { cookies } from 'next/headers'
 import Link from 'next/link'
 
 import { IArticle } from '@/types/articles'
+import { getJwtToken } from '@/lib/serverActions'
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 
@@ -13,9 +13,8 @@ interface ArticleProps {
   article: IArticle
 }
 
-export function ArticlePreview({ article, index }: ArticleProps) {
-  const cookieStore = cookies()
-  const token = cookieStore.get('jwt')
+export async function ArticlePreview({ article, index }: ArticleProps) {
+  const token = await getJwtToken()
 
   return (
     <>

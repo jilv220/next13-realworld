@@ -1,17 +1,17 @@
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { cookies } from 'next/headers'
-import Link from 'next/link'
 
 import { IUserWithToken } from '@/types/user'
 import { siteConfig } from '@/config/site'
 import fetchUser from '@/lib/fetchUser'
+import { getJwtToken } from '@/lib/serverActions'
 import { MainNav } from '@/components/main-nav'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 import { MainNavDropDown } from './main-nav-dropdown'
 
 export async function SiteHeader() {
-  const token = cookies().get('jwt')
-
+  const token = await getJwtToken()
   let init: RequestInit = {
     cache: 'no-store',
   }

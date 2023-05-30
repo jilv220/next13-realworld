@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 import { IArticle } from '@/types/articles'
@@ -7,7 +6,7 @@ import useFetchArticles from '@/lib/useFetchArticles'
 import { ArticlePreview } from '@/components/article-preview'
 import { ProfileToggle } from '@/components/profile-toggle'
 
-export default async function FavoritesPage({ params }) {
+export default async function ProfilePage({ params }) {
   const username = decodeURIComponent(params.slug).slice(1)
   const res = await fetchData(
     `https://api.realworld.io/api/profiles/${username}`
@@ -18,28 +17,13 @@ export default async function FavoritesPage({ params }) {
   const profile = res.data.profile
 
   const tabList = ['Articles', 'Favorites']
-  const selected = 1
+  const selected = 0
 
-  const cookieStore = cookies()
-  const token = cookieStore.get('jwt')
-
-  let init: RequestInit = {
-    cache: 'no-store',
-  }
-  if (token) {
-    init.headers = {
-      Authorization: `Token ${token.value}`,
-    }
-  }
-
-  const { articles } = await useFetchArticles(
-    {
-      favorited: profile.username,
-      limit: 20,
-      offset: 0,
-    },
-    init
-  )
+  const { articles } = await useFetchArticles({
+    author: profile.username,
+    limit: 5,
+    offset: 0,
+  })
 
   return (
     <>
@@ -52,6 +36,7 @@ export default async function FavoritesPage({ params }) {
         <main className='basis-3/4 items-center'>
           {articles.map((article: IArticle) => (
             <div key={article.slug}>
+              {/* @ts-expect-error Server Component */}
               <ArticlePreview article={article}></ArticlePreview>
             </div>
           ))}

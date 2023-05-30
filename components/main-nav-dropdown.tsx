@@ -32,7 +32,9 @@ export function MainNavDropDown({ user, items }: MainNavProps) {
               height={32}
             />
           )}
-          <AvatarFallback>AI</AvatarFallback>
+          <span className='flex h-full w-full items-center justify-center rounded-full bg-muted'>
+            AI
+          </span>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

@@ -7,6 +7,7 @@ import { fetchData } from '@/lib/fetch'
 import { ArticlePreview } from '@/components/article-preview'
 import { BottomNav } from '@/components/bottom-nav'
 import { FeedToggle } from '@/components/feed-toggle'
+import { SiteHeader } from '@/components/site-header'
 import { Tags } from '@/components/tags'
 
 export const runtime = 'edge'
@@ -43,7 +44,7 @@ export default async function IndexPage({ searchParams }) {
   let articlesCount
   let res
 
-  if (token) {
+  if (token && token.value !== 'deleted') {
     res = await fetchData(
       'https://api.realworld.io/api/articles',
       queryParams,
@@ -64,7 +65,7 @@ export default async function IndexPage({ searchParams }) {
     )
   }
 
-  if (searchParams.tab === 'feed' && token) {
+  if (searchParams.tab === 'feed' && token && token.value !== 'deleted') {
     selected = tabList.length - 1
     res = await fetchData(
       'https://api.realworld.io/api/articles/feed',
@@ -88,37 +89,42 @@ export default async function IndexPage({ searchParams }) {
       : articlesCount / siteConfig.limit
 
   return (
-    <div className='container mx-auto md:px-4 xl:max-w-[1140px]'>
-      <Suspense
-        fallback={
+    <>
+      {/* @ts-expect-error Server Component */}
+      <SiteHeader />
+      <div className='container mx-auto md:px-4 xl:max-w-[1140px]'>
+        <Suspense
+          fallback={
+            <FeedToggle valueList={tabList} defaultValue={tabList[selected]}>
+              Loading...
+            </FeedToggle>
+          }
+        >
           <FeedToggle valueList={tabList} defaultValue={tabList[selected]}>
-            Loading...
-          </FeedToggle>
-        }
-      >
-        <FeedToggle valueList={tabList} defaultValue={tabList[selected]}>
-          <div className='md:flex'>
-            <main className='basis-3/4 items-center'>
-              {articles.map((article: IArticle, index) => (
-                <div key={article.slug}>
-                  <ArticlePreview
-                    article={article}
-                    index={index}
-                  ></ArticlePreview>
+            <div className='md:flex'>
+              <main className='basis-3/4 items-center'>
+                {articles.map((article: IArticle, index) => (
+                  <div key={article.slug}>
+                    {/* @ts-expect-error Server Component */}
+                    <ArticlePreview
+                      article={article}
+                      index={index}
+                    ></ArticlePreview>
+                  </div>
+                ))}
+                <BottomNav pageCount={pageCount} />
+              </main>
+              <aside className='basis-1/4 px-4 pb-8 sm:mt-0 md:mt-6'>
+                <div className='rounded bg-secondary px-[10px] pb-[10px] pt-[5px]'>
+                  <p className='mb-[0.2rem]'> Popular Tags </p>
+                  {/* @ts-expect-error Server Component */}
+                  <Tags></Tags>
                 </div>
-              ))}
-              <BottomNav pageCount={pageCount} />
-            </main>
-            <aside className='basis-1/4 px-4 pb-8 sm:mt-0 md:mt-6'>
-              <div className='rounded bg-secondary px-[10px] pb-[10px] pt-[5px]'>
-                <p className='mb-[0.2rem]'> Popular Tags </p>
-                {/* @ts-expect-error Server Component */}
-                <Tags></Tags>
-              </div>
-            </aside>
-          </div>
-        </FeedToggle>
-      </Suspense>
-    </div>
+              </aside>
+            </div>
+          </FeedToggle>
+        </Suspense>
+      </div>
+    </>
   )
 }

@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { IUserWithToken } from '@/types/user'
@@ -7,24 +8,36 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
-import LogoutBtn from '@/components/logout-btn'
 
 export default async function SettingsPage() {
   const token = await getJwtToken()
 
+  if (!token) {
+    redirect('/')
+  }
+
   let init: RequestInit = {
     cache: 'no-cache',
-  }
-  if (token) {
-    init.headers = {
+    headers: {
       Authorization: `Token ${token.value}`,
-    }
+    },
   }
 
   let user: IUserWithToken
   try {
     user = await fetchUser(init)
   } catch (err) {
+    redirect('/')
+  }
+
+  const handleLogout = async () => {
+    'use server'
+    cookies().set({
+      name: 'jwt',
+      value: 'deleted',
+      path: '/',
+      expires: new Date(0),
+    })
     redirect('/')
   }
 
@@ -85,7 +98,15 @@ export default async function SettingsPage() {
         </form>
         <form className='w-full md:max-w-[40%]'>
           <Separator className='my-4' />
-          <LogoutBtn />
+          <Button
+            className='float-left mb-4 px-6 py-4 text-base hover:border-destructive hover:bg-destructive'
+            variant={'outline'}
+            size='lg'
+            type='submit'
+            formAction={handleLogout}
+          >
+            Or click here to logout
+          </Button>
         </form>
       </div>
     </div>

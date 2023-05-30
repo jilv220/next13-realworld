@@ -23,12 +23,17 @@ export default async function fetchUser(init?: RequestInit) {
   return res.data.user as IUserWithToken
 }
 
-export async function fetchUsersLogin(token: RequestCookie) {
+export async function fetchUsersLogin(body: BodyInit) {
   const res = await fetchData(
     'https://api.realworld.io/api/users/login',
     undefined,
     {
-      headers: { Authorization: `Token ${token.value}` },
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+      cache: 'no-store',
     }
   )
   switch (res.status) {
