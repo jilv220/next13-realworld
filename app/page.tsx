@@ -10,7 +10,6 @@ import { FeedToggle } from '@/components/feed-toggle'
 import { SiteHeader } from '@/components/site-header'
 import { Tags } from '@/components/tags'
 
-export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 export default async function IndexPage({ searchParams }) {
