@@ -11,6 +11,8 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import LogoutBtn from '@/components/logout-btn'
 
+export const dynamic = 'force-dynamic'
+
 export default async function SettingsPage() {
   const cookieStore = cookies()
   const token = cookieStore.get('jwt')
