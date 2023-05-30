@@ -1,7 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 import { clearJwtToken } from '@/lib/cookie'
 
 import { Button } from './ui/button'

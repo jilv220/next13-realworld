@@ -1,24 +1,19 @@
-import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { IUserWithToken } from '@/types/user'
 import fetchUser from '@/lib/fetchUser'
-import { clearJwtToken } from '@/lib/serverActions'
+import { getJwtToken } from '@/lib/serverActions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import LogoutBtn from '@/components/logout-btn'
 
-export const dynamic = 'force-dynamic'
-
 export default async function SettingsPage() {
-  const cookieStore = cookies()
-  const token = cookieStore.get('jwt')
+  const token = await getJwtToken()
 
   let init: RequestInit = {
-    cache: 'no-store',
+    cache: 'no-cache',
   }
   if (token) {
     init.headers = {
